@@ -35,7 +35,7 @@ def calculate_angle_with_z_axis(traj, n_index, h_index):
 
 #folders = ['FILE_1', 'FILE_2]
 
-def angle_calc(FILE_PATH, FILE_NAME, folders, z_value, START_TIME, ATOM_NUM_AFT_N, OUTFILE_NAME):
+def angle_calc(FILE_PATH, FILE_NAME, folders, START_TIME, ATOM_NUM_AFT_N, OUTFILE_NAME):
   
   for folder in folders:
       # Construct the full path to the XTC and GRO files
