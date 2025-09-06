@@ -6,7 +6,7 @@ import os
 import numpy as np
 import pandas as pd
 
-  
+# Modified version of code written by Dr. Dallin
 def _compute_bounded_geometry( traj,
                                 triplets,
                                 distance_indices = [ 0, 2 ],
@@ -28,15 +28,6 @@ def _compute_bounded_geometry( traj,
             else:
                 abc_distances.append( md.compute_distances( traj, triplets[ :, abc_pair ], ) )
 
-        # Law of cosines calculation to find the H-Donor...Acceptor angle
-        #            c**2 = a**2 + b**2 - 2*a*b*cos(C)
-        #                        acceptor
-        #                          /\
-        #                         /  \
-        #                      c /    \ b
-        #                       /      \
-        #                      /______(_\
-        #                     H    a     donor
         a, b, c = abc_distances
         cosines = ( a ** 2 + b ** 2 - c ** 2 ) / ( 2 * a * b )
         np.clip(cosines, -1, 1, out=cosines) # avoid NaN error
