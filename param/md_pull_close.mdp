@@ -1,0 +1,64 @@
+title       = NVT Equilibration 
+define      = -DPOSRES          ; position restrain the protein
+; Run parameters
+integrator  = md                ; leap-frog integrator
+nsteps      = 10000000             ; 2 * 50000 = 100 ps
+dt          = 0.002             ; 2 fs
+; Output control
+nstxout         = 0
+nstvout         = 0
+nstxtcout       = 5000       ; save every 1 ps (for initial equil)
+nstenergy       = 100           ; save energies every 0.2 ps
+nstlog          = 100           ; update log file every 0.2 ps
+; Extension
+table-extension = 3.5
+; Bond parameters
+continuation    = no
+constraint_algorithm = lincs    ; holonomic constraints
+constraints     = h-bonds               ; all bonds (even heavy atom-H bonds) constrained
+; Neighborsearching
+ns_type         = grid          ; include all atoms in neighbor list
+nstlist         = 10            ; recommended for verlet
+rlist           = 1.2           ; recommended for charmm
+rcoulomb        = 1.2           ; ibid
+rvdw            = 1.2           ; for switching function
+rvdw-switch     = 1.0           ; when to start switching off force
+; Electrostatics
+vdwtype         = Cutoff
+vdw-modifier    = Potential-switch      ; smoothing function based on Bockmann
+coulombtype     = PME
+; Temperature coupling is on
+tcoupl          = v-rescale             ; temp coupling
+ref_t           = 298
+tau_t           = 0.1
+tc-grps         = System
+; Pressure coupling is off
+pcoupl          = no    ; NVT
+; Periodic boundary conditions
+pbc             = xyz
+; Dispersion correction
+DispCorr        = EnerPres          ; Note that dispersion correction should be applied in the case of lipid monolayers, but not bilayers.
+; Velocity generation
+gen_vel             = yes               ; assign velocities from Maxwell distribution
+gen_temp        = 298
+comm-mode           = Linear    ; remove COM motion; possibly freeze Au atoms?
+nstcomm             = 10                ; remove every step
+nstcalcenergy   = 5                 ; calculate energy every step
+
+; These options remove COM motion of the system
+comm-grps       = System 
+; Pull code
+pull                    = yes
+pull_ncoords            = 1         ; only one reaction coordinate 
+pull_ngroups            = 2         ; two groups defining one reaction coordinate  
+pull_group1_name        = UPSAM_s 
+pull_group2_name        = DOWNSAM_s   
+pull-pbc-ref-prev-step-com = yes
+pull_coord1_type        = umbrella  ; harmonic potential
+pull_coord1_dim         = N N Y
+pull_coord1_geometry    = distance  
+pull_coord1_groups      = 1 2
+pull_coord1_start       = yes       ; define initial COM distance > 0
+pull-coord1-init		= StartingDistance
+pull_coord1_rate        = 0      ; 0.001 nm per ps = 1 nm per ns
+pull_coord1_k           = 8000      ; kJ mol^-1 nm^-2
